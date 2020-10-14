@@ -3,13 +3,15 @@
 
 #include "SDL.h"
 #include <vector>
+#include "moon.h"
+#include "planet.h"
 
 class Universe {
  public:
   // Universe();
   // Universe(std::string map_csv_filename);
-  // ~Universe();
-  run(); // Main simulation loop
+  ~Universe();
+  void run(); // Main simulation loop
   
  private:
   // Graphics
@@ -19,8 +21,8 @@ class Universe {
   SDL_Renderer* renderer = NULL;
 
   // Data structures
-  std::vector<Moon> mMoons;
-  std::vector<Planet> mPlanets;
+  std::vector<Moon*> mMoons;
+  std::vector<Planet*> mPlanets;
 
   // void readCsvMap(std::string filename);
 };

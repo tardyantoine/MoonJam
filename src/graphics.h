@@ -4,9 +4,6 @@
 #include "SDL.h"
 #include "point.h"
 
-class Graphics {
- public:
-  void drawCircle(SDL_Renderer * renderer, Point p, int32_t radius)
-};
+void drawCircle(SDL_Renderer * renderer, Point p, int radius);
 
 #endif

@@ -4,14 +4,14 @@
 #include "SDL.h"
 #include "graphics.h"
 
-void Graphics::drawCircle(SDL_Renderer * renderer, Point p, int32_t radius) {
-   const int32_t diameter = (radius * 2);
+void drawCircle(SDL_Renderer * renderer, Point p, int radius) {
+   const int diameter = (radius * 2);
 
-   int32_t x = (radius - 1);
-   int32_t y = 0;
-   int32_t tx = 1;
-   int32_t ty = 1;
-   int32_t error = (tx - diameter);
+   int x = (radius - 1);
+   int y = 0;
+   int tx = 1;
+   int ty = 1;
+   int error = (tx - diameter);
 
    while (x >= y)
    {

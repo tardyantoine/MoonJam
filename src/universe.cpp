@@ -10,11 +10,13 @@
 
 void Universe::run()
 {
-  Planet p(Point(kWidth/2, kHeight/2), 50);
+  Planet* p = new Planet(Point(kWidth/2, kHeight/2), 50);
   mPlanets.push_back(p);
+  std::cout << "Planets created..." << std::endl;
 
-  Moon m(Point(kWidth/2, kHeight/4), Point(0.06, 0.0), 5);
+  Moon* m = new Moon(Point(kWidth/2, kHeight/4), Point(0.06, 0.0), 5);
   mMoons.push_back(m);
+  std::cout << "Moons created..." << std::endl;
 
   if (SDL_Init(SDL_INIT_VIDEO) == 0) {
     SDL_Window* window = NULL;
@@ -26,17 +28,22 @@ void Universe::run()
       SDL_bool done = SDL_FALSE;
       while(!done) {
         SDL_Event event;
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+        SDL_RenderClear(renderer);
+
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
         // Draw planets
-        for(Planet p : mPlanets) {
+        for(Planet* p : mPlanets) {
           p->drawPlanet(renderer);
         }
 
         // Draw moons and move them
-        for(Moon m : mMoons) {
+        for(Moon* m : mMoons) {
           m->drawMoon(renderer);
           m->updateState(mPlanets);
         }
+        SDL_RenderPresent(renderer);
 
         // Check for user input
         SDL_PollEvent(&event);
@@ -48,15 +55,14 @@ void Universe::run()
         case SDL_KEYDOWN:
           switch( event.key.keysym.sym ){
           case SDLK_UP:
-              vx *= 0.00001;
-              vy +\*= 0.00001;
-              break;
+            // TODO update
+            mMoons[0]->modifySpeed(1.00001);
+            break;
           case SDLK_DOWN:
-              vx -= 0.00001;
-              vy -= 0.00001;
-              break;
+            mMoons[0]->modifySpeed(0.95);
+            break;
           default:
-              break;
+            break;
           break;
           }
         }
@@ -71,6 +77,18 @@ void Universe::run()
     }
   }
   SDL_Quit();
+}
+
+Universe::~Universe() {
+  // Delete everything
+  for(Planet* p : mPlanets) {
+    delete(p);
+  }
+
+  // Draw moons and move them
+  for(Moon* m : mMoons) {
+    delete(m);
+  }
 }
 
 #endif

@@ -13,7 +13,7 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS} src)
 add_link_options("-lSDL_image")
 
-add_executable(MoonJam src/main.cpp src/universe.cpp src/moon.cpp src/planets.cpp src/point.cpp src/graphics.cpp)
+add_executable(MoonJam src/main.cpp src/universe.cpp src/moon.cpp src/planet.cpp src/point.cpp src/graphics.cpp)
 string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
 target_link_libraries(MoonJam ${SDL2_LIBRARIES} )
 
