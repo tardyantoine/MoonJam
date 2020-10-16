@@ -8,13 +8,14 @@
 
 class Planet {
  public:
-  Planet(Point pos, int r) : mPos(pos), mR(r) {}
-  void drawPlanet(SDL_Renderer * renderer);
+  Planet(Point pos, int r) : mP(pos), mR(r) { mSoi = r * 8; }
+  void draw(SDL_Renderer * renderer);
   Point computeAccelerationContribution(Point Pos);
 
- private:
-  Point mPos;
+ protected:
+  Point mP;
   int mR;
+  int mSoi; // Radius of sphere of influence
 };
 
 #endif

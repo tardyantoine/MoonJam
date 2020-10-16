@@ -9,11 +9,11 @@
 #include <ctime>
 #include <memory>
 
-class Moon {
+class Moon : public Planet{
  public:
   Moon(Point p, Point v, int r, bool moving);
   void updateState(const std::vector<std::shared_ptr<Planet>> &planets);
-  void drawMoon(SDL_Renderer * renderer);
+  void draw(SDL_Renderer * renderer);
   void initTail();
   void modifySpeed(float modifier);
   void setMoving(bool m);
@@ -23,9 +23,7 @@ class Moon {
  private:
   clock_t lastUpdate;
   bool mMoving;
-  Point mP; // Position
   Point mV; // Speed
-  int mR; // Radius
   std::deque<Point> mTail;
   long mRed;
   long mGreen;

@@ -11,19 +11,18 @@
 #include "moon.h"
 
 // TODO:
-// - multi thread
-// - Inherit moon planet
 // - SOI
 // - Collisions
 // - Different worlds vs random
-// - File map
 // - Start menu buttons
 
 #define FPS 2.0f
 
 void Universe::run()
 {
-  auto p = std::make_shared<Planet>(Point(kWidth/2, kHeight/2), 50);
+  auto p = std::make_shared<Planet>(Point(kWidth/4, kHeight/2), 50);
+  mPlanets.push_back(p);
+  p = std::make_shared<Planet>(Point(kWidth/4*3, kHeight/2), 50);
   mPlanets.push_back(p);
   std::cout << "First Planet created..." << std::endl;
 
@@ -53,12 +52,12 @@ void Universe::run()
 
         // Draw planets
         for(auto p : mPlanets) {
-          p->drawPlanet(renderer);
+          p->draw(renderer);
         }
 
         // Draw moons and move them
         for(auto m : mMoons) {
-          m->drawMoon(renderer);
+          m->draw(renderer);
           m->updateState(mPlanets);
         }
         SDL_RenderPresent(renderer);
@@ -88,13 +87,13 @@ void Universe::run()
           switch( event.key.keysym.sym ){
           case SDLK_UP:
             if(mState == FsmState::PilotingMoon) {
-              mMoons.back()->modifySpeed(1.003);
+              mMoons.back()->modifySpeed(kAccel);
             }
             break;
 
           case SDLK_DOWN:
             if(mState == FsmState::PilotingMoon) {
-              mMoons.back()->modifySpeed(0.998);
+              mMoons.back()->modifySpeed(kDecel);
             }
             break;
 

@@ -13,10 +13,8 @@
 #define TAIL_LENGTH 300
 #define TAIL_INTERVAL 1
 
-Moon::Moon(Point p, Point v, int r, bool moving) {
-  mP = p;
+Moon::Moon(Point p, Point v, int r, bool moving) : Planet(p, r) {
   mV = v;
-  mR = r;
   mMoving = moving;
   initTail();
   srand(clock());
@@ -73,7 +71,7 @@ void Moon::modifySpeed(float modifier) {
   mV = mV * modifier;
 }
 
-void Moon::drawMoon(SDL_Renderer * renderer) {
+void Moon::draw(SDL_Renderer * renderer) {
   // Draw tail
   Point p(0, 0), pPrev(0, 0);
   float intensity = 0;
