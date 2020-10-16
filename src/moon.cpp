@@ -49,11 +49,11 @@ void Moon::updateTail() {
   mTail.push_back(mP);
 }
 
-void Moon::updateState(const std::vector<Planet*> &planets) {
+void Moon::updateState(const std::vector<std::shared_ptr<Planet>> &planets) {
   Point a(0, 0);
   
   if(mMoving) {
-    for(Planet* p : planets) {
+    for(auto p : planets) {
       a = a + p->computeAccelerationContribution(mP);
     }
 

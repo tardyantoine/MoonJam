@@ -7,11 +7,12 @@
 #include "planet.h"
 #include <queue>
 #include <ctime>
+#include <memory>
 
 class Moon {
  public:
   Moon(Point p, Point v, int r, bool moving);
-  void updateState(const std::vector<Planet*> &planets);
+  void updateState(const std::vector<std::shared_ptr<Planet>> &planets);
   void drawMoon(SDL_Renderer * renderer);
   void initTail();
   void modifySpeed(float modifier);

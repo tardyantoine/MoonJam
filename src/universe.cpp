@@ -12,11 +12,8 @@
 
 // TODO:
 // - multi thread
-// - User input
-// - random start point
 // - Inherit moon planet
 // - SOI
-// - Braking
 // - Collisions
 // - Different worlds vs random
 // - File map
@@ -26,14 +23,14 @@
 
 void Universe::run()
 {
-  Planet* p = new Planet(Point(kWidth/2, kHeight/2), 50);
+  auto p = std::make_shared<Planet>(Point(kWidth/2, kHeight/2), 50);
   mPlanets.push_back(p);
   std::cout << "First Planet created..." << std::endl;
 
   srand(clock());
   float newX = (float(rand() % kWidth) * 0.9f) + (0.05f * float(kWidth));
   float newY = (float(rand() % kHeight) * 0.9f) + (0.05f * float(kHeight));
-  Moon* m = new Moon(Point(newX, newY), Point(0.0, 0.0), 5, false);
+  auto m = std::make_shared<Moon>(Point(newX, newY), Point(0.0, 0.0), 5, false);
   mMoons.push_back(m);
   std::cout << "First Moon created..." << std::endl;
 
@@ -55,12 +52,12 @@ void Universe::run()
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
         // Draw planets
-        for(Planet* p : mPlanets) {
+        for(auto p : mPlanets) {
           p->drawPlanet(renderer);
         }
 
         // Draw moons and move them
-        for(Moon* m : mMoons) {
+        for(auto m : mMoons) {
           m->drawMoon(renderer);
           m->updateState(mPlanets);
         }
@@ -108,7 +105,7 @@ void Universe::run()
               srand(clock());
               float newX = (float(rand() % kWidth) * 0.9f) + (0.05f * float(kWidth));
               float newY = (float(rand() % kHeight) * 0.9f) + (0.05f * float(kHeight));
-              Moon* m = new Moon(Point(newX, newY), Point(0.0, 0.0), 5, false);
+              auto m = std::make_shared<Moon>(Point(newX, newY), Point(0.0, 0.0), 5, false);
               mMoons.push_back(m);
               std::cout << "New Moon created..." << std::endl;
             }
@@ -133,18 +130,6 @@ void Universe::run()
 
 Universe::Universe() {
   mState = FsmState::CreatingMoon;
-}
-
-Universe::~Universe() {
-  // Delete everything
-  for(Planet* p : mPlanets) {
-    delete(p);
-  }
-
-  // Draw moons and move them
-  for(Moon* m : mMoons) {
-    delete(m);
-  }
 }
 
 #endif

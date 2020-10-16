@@ -3,8 +3,11 @@
 
 #include "SDL.h"
 #include <vector>
+#include <thread>
+#include <memory>
 #include "moon.h"
 #include "planet.h"
+
 
 enum FsmState {
   CreatingMoon,
@@ -15,7 +18,6 @@ class Universe {
  public:
   Universe();
   // Universe(std::string map_csv_filename);
-  ~Universe();
   void run(); // Main simulation loop
   
  private:
@@ -27,8 +29,9 @@ class Universe {
   SDL_Renderer* renderer = NULL;
 
   // Data structures
-  std::vector<Moon*> mMoons;
-  std::vector<Planet*> mPlanets;
+  std::vector<std::shared_ptr<Moon>> mMoons;
+  std::vector<std::thread> mThreads;
+  std::vector<std::shared_ptr<Planet>> mPlanets;
   FsmState mState;
   // void readCsvMap(std::string filename);
 };
