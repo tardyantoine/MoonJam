@@ -5,7 +5,7 @@
 
 // TODO:
 // - Collisions
-// Score and instructions
+// - Score
 // - README!
 
 void Universe::run()
@@ -13,18 +13,37 @@ void Universe::run()
   if (SDL_Init(SDL_INIT_VIDEO) == 0) {
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
-
+    SDL_Surface* surfC = NULL;
+    SDL_Texture* messageC = NULL;
+    SDL_Surface* surfP = NULL;
+    SDL_Texture* messageP = NULL;
+    
     if (SDL_CreateWindowAndRenderer(kWidth, kHeight, 0, &window, &renderer) == 0) {
       
-      // Infinite MAIN loop
+      // Instructions message
+      TTF_Init();
+      TTF_Font* nasa = TTF_OpenFont("../fonts/nasalization-rg.ttf", 500);
+      SDL_Color white = {255, 255, 255};
+      SDL_Rect messageRect; 
+      messageRect.w = 1000;  
+      messageRect.h = 40;
+      messageRect.x = kWidth/2 - messageRect.w/2;
+      messageRect.y = 10; 
+      SDL_Surface* surfP = TTF_RenderText_Solid(
+        nasa, "UP/DOWN arrow to control speed, ENTER to create Moon", white);
+      messageP = SDL_CreateTextureFromSurface(renderer, surfP);
+      SDL_Surface* surfC = TTF_RenderText_Solid(
+        nasa, "LEFT click to define the new Moon's initial velocity vector", white);
+      messageC = SDL_CreateTextureFromSurface(renderer, surfC);
+                  
+      // Main infinite loop
       SDL_bool done = SDL_FALSE;
-
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       while(!done) {
+        // Init
         SDL_Event event;
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
-
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
         // Draw planets
@@ -37,6 +56,13 @@ void Universe::run()
           m->draw(renderer);
           m->updateState(mPlanets);
         }
+
+        // Display instuctions message
+        mState == FsmState::CreatingMoon ? 
+          SDL_RenderCopy(renderer, messageC, NULL, &messageRect) : 
+          SDL_RenderCopy(renderer, messageP, NULL, &messageRect);
+
+        // Render all
         SDL_RenderPresent(renderer);
 
         // Check for user input
@@ -94,12 +120,12 @@ void Universe::run()
       }
     }
 
-    if (renderer) {
-      SDL_DestroyRenderer(renderer);
-    }
-    if (window) {
-      SDL_DestroyWindow(window);
-    }
+    if(renderer) { SDL_DestroyRenderer(renderer); }
+    if(window) { SDL_DestroyWindow(window); }
+    if(surfP) { SDL_FreeSurface(surfP); }
+    if(messageP) { SDL_DestroyTexture(messageP); }
+    if(surfC) { SDL_FreeSurface(surfC); }
+    if(messageC) { SDL_DestroyTexture(messageC); }
   }
   SDL_Quit();
 }
