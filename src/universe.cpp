@@ -8,7 +8,7 @@
 // - Score
 // - README!
 
-void Universe::run()
+void Universe::run(uint planetNumber)
 {
   if (SDL_Init(SDL_INIT_VIDEO) == 0) {
     SDL_Window* window = NULL;
@@ -17,6 +17,16 @@ void Universe::run()
     SDL_Texture* messageC = NULL;
     SDL_Surface* surfP = NULL;
     SDL_Texture* messageP = NULL;
+
+    // Get resolution
+    SDL_DisplayMode DM;
+    SDL_GetDesktopDisplayMode(0, &DM);
+    kWidth = DM.w;
+    kHeight = DM.h;
+    std::cout << kWidth << std::endl;
+
+    // Needs to happen after resolution is set
+    createBodies(planetNumber);
     
     if (SDL_CreateWindowAndRenderer(kWidth, kHeight, 0, &window, &renderer) == 0) {
       
@@ -30,7 +40,7 @@ void Universe::run()
       messageRect.x = kWidth/2 - messageRect.w/2;
       messageRect.y = 10; 
       SDL_Surface* surfP = TTF_RenderText_Solid(
-        nasa, "UP/DOWN arrow to control speed, ENTER to create Moon", white);
+        nasa, "UP/DOWN Arrow to control speed, ENTER to create Moon", white);
       messageP = SDL_CreateTextureFromSurface(renderer, surfP);
       SDL_Surface* surfC = TTF_RenderText_Solid(
         nasa, "LEFT click to define the new Moon's initial velocity vector", white);
@@ -130,9 +140,7 @@ void Universe::run()
   SDL_Quit();
 }
 
-Universe::Universe(uint planetNumber) {
-  mState = FsmState::CreatingMoon;
-
+void Universe::createBodies(uint planetNumber) {
   switch(planetNumber) {
   default:
   case 1:
@@ -173,6 +181,10 @@ Universe::Universe(uint planetNumber) {
   auto m = std::make_shared<Moon>(Point(newX, newY), Point(0.0, 0.0), 5, false);
   mMoons.push_back(m);
   std::cout << "First Moon created..." << std::endl;
+}
+
+Universe::Universe() {
+  mState = FsmState::CreatingMoon;
 }
 
 #endif

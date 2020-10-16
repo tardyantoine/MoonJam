@@ -15,9 +15,9 @@ int main(int argc, char* argv[])
     }
   }
 
-  Universe universe(x);
+  Universe universe;
   std::cout << "Universe go for launch, starting simulation..." << std::endl;
-  universe.run();
+  universe.run(x);
   std::cout << "Exiting main simulation, goodbye" << std::endl;
   return 0;
 }

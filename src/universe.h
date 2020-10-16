@@ -20,13 +20,13 @@ enum FsmState {
 
 class Universe {
  public:
-  Universe(uint planetNumber);
-  void run(); // Main simulation loop
+  Universe();
+  void run(uint planetNumber); // Main simulation loop
   
  private:
   // Graphics
-  const int kHeight = 1080;
-  const int kWidth  = 1920;
+  int kHeight;
+  int kWidth;
   const float kSpeedCoeff = 10;
   const float kAccel = 1.01;
   const float kDecel = 0.99;
@@ -38,6 +38,9 @@ class Universe {
   std::vector<std::thread> mThreads;
   std::vector<std::shared_ptr<Planet>> mPlanets;
   FsmState mState;
+
+  // Methods
+  void createBodies(uint planetNumber);
 };
 
 #endif
