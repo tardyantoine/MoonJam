@@ -21,6 +21,10 @@ class Moon : public Planet{
   Point getPos();
   
  private:
+  // Constants
+  const int kTailLength = 300;
+  const int kTailInterval = 1;
+
   clock_t lastUpdate;
   bool mMoving;
   Point mV; // Speed

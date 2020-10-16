@@ -1,17 +1,7 @@
 #ifndef MOON_CPP
 #define MOON_CPP
 
-#include <iostream>
-#include <ctime>
-#include <vector>
-#include "SDL.h"
 #include "moon.h"
-#include "graphics.h"
-#include "point.h"
-#include "planet.h"
-
-#define TAIL_LENGTH 300
-#define TAIL_INTERVAL 1
 
 Moon::Moon(Point p, Point v, int r, bool moving) : Planet(p, r) {
   mV = v;
@@ -37,7 +27,7 @@ Point Moon::getPos() {
 }
 
 void Moon::initTail() {
-  for(int i = 0; i < TAIL_LENGTH; ++i) {
+  for(int i = 0; i < kTailLength; ++i) {
     mTail.push_back(mP);
   }
 }
@@ -77,11 +67,11 @@ void Moon::draw(SDL_Renderer * renderer) {
   float intensity = 0;
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-  for(int i = 1; i < TAIL_LENGTH; i += TAIL_INTERVAL) {
+  for(int i = 1; i < kTailLength; i += kTailInterval) {
     p = mTail[i];
     pPrev = mTail[i - 1];
 
-    float intensity = 255.0f * ((float)i / TAIL_LENGTH);
+    float intensity = 255.0f * ((float)i / kTailLength);
     SDL_SetRenderDrawColor(renderer, mRed, mBlue, mGreen, intensity);
 
     SDL_RenderDrawLine(renderer, p.mX, p.mY, pPrev.mX, pPrev.mY);

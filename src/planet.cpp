@@ -1,12 +1,7 @@
 #ifndef PLANETS_CPP
 #define PLANETS_CPP
 
-#include "SDL.h"
-#include <vector>
 #include "planet.h"
-#include "graphics.h"
-#include "point.h"
-#include <iostream>
 
 #define A 9000000
 
@@ -27,7 +22,7 @@ Point Planet::computeAccelerationContribution(Point pos) {
 
   // Compute component if within sphere of influence
   if(r <= mSoi) {
-    a = a * (A / std::pow(r, 2));  
+    a = a * (kGravity / std::pow(r, 2));  
   }
   else {
     a = {0, 0};

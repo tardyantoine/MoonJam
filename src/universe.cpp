@@ -1,29 +1,20 @@
 #ifndef UNIVERSE_CPP
 #define UNIVERSE_CPP
-
 #include <iostream>
-#include <queue>
-#include <ctime>
-#include <thread>
-#include "SDL.h"
 #include "universe.h"
-#include "planet.h"
-#include "moon.h"
 
 // TODO:
-// - SOI
 // - Collisions
 // - Different worlds vs random
 // - Start menu buttons
-
-#define FPS 2.0f
+// - SpaceBody parent class
 
 void Universe::run()
 {
-  auto p = std::make_shared<Planet>(Point(kWidth/4, kHeight/2), 50);
+  auto p = std::make_shared<Planet>(Point(kWidth/2, kHeight/2), 50);
   mPlanets.push_back(p);
-  p = std::make_shared<Planet>(Point(kWidth/4*3, kHeight/2), 50);
-  mPlanets.push_back(p);
+  // p = std::make_shared<Planet>(Point(kWidth/4*3, kHeight/2), 50);
+  // mPlanets.push_back(p);
   std::cout << "First Planet created..." << std::endl;
 
   srand(clock());
