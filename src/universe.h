@@ -16,7 +16,7 @@ enum FsmState {
 
 class Universe {
  public:
-  Universe();
+  Universe(uint planetNumber);
   void run(); // Main simulation loop
   
  private:

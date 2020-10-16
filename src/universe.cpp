@@ -5,25 +5,11 @@
 
 // TODO:
 // - Collisions
-// - Different worlds vs random
-// - Start menu buttons
-// - SpaceBody parent class
+// Score and instructions
+// - README!
 
 void Universe::run()
 {
-  auto p = std::make_shared<Planet>(Point(kWidth/2, kHeight/2), 50);
-  mPlanets.push_back(p);
-  // p = std::make_shared<Planet>(Point(kWidth/4*3, kHeight/2), 50);
-  // mPlanets.push_back(p);
-  std::cout << "First Planet created..." << std::endl;
-
-  srand(clock());
-  float newX = (float(rand() % kWidth) * 0.9f) + (0.05f * float(kWidth));
-  float newY = (float(rand() % kHeight) * 0.9f) + (0.05f * float(kHeight));
-  auto m = std::make_shared<Moon>(Point(newX, newY), Point(0.0, 0.0), 5, false);
-  mMoons.push_back(m);
-  std::cout << "First Moon created..." << std::endl;
-
   if (SDL_Init(SDL_INIT_VIDEO) == 0) {
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
@@ -118,8 +104,49 @@ void Universe::run()
   SDL_Quit();
 }
 
-Universe::Universe() {
+Universe::Universe(uint planetNumber) {
   mState = FsmState::CreatingMoon;
+
+  switch(planetNumber) {
+  default:
+  case 1:
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/2, kHeight/2), 50, 5000));
+    break;
+
+  case 2:
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4,   kHeight/2), 50, 500));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4*3, kHeight/2), 50, 500));
+    break;
+
+  case 3:
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4,   kHeight/3),   30, 500));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4*3, kHeight/3),   30, 500));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/2,   kHeight/3*2), 30, 500));
+    break;
+
+  case 4:
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/5,   kHeight/3),   20, 400));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/5*2, kHeight/3*2), 20, 400));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/5*3, kHeight/3),   20, 400));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/5*4, kHeight/3*2), 20, 400));
+    break;
+
+  case 5:
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6,   kHeight/3),   20, 400));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6*3, kHeight/3),   20, 400));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6*5, kHeight/3),   20, 400));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4,   kHeight/3*2), 20, 400));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4*3, kHeight/3*2), 20, 400));
+    break;
+  }
+  std::cout << "Universe created..." << std::endl;
+
+  srand(clock());
+  float newX = (float(rand() % kWidth) * 0.9f) + (0.05f * float(kWidth));
+  float newY = (float(rand() % kHeight) * 0.9f) + (0.05f * float(kHeight));
+  auto m = std::make_shared<Moon>(Point(newX, newY), Point(0.0, 0.0), 5, false);
+  mMoons.push_back(m);
+  std::cout << "First Moon created..." << std::endl;
 }
 
 #endif

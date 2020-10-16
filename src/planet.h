@@ -5,10 +5,11 @@
 #include <vector>
 #include "graphics.h"
 #include "point.h"
+#include "space_body.h"
 
-class Planet {
+class Planet : SpaceBody {
  public:
-  Planet(Point pos, int r) : mP(pos), mR(r) { mSoi = r * kSoiRadiusFactor; }
+  Planet(Point pos, int r, int soi) : SpaceBody(pos, r) { mSoi = soi; }
   void draw(SDL_Renderer * renderer);
   Point computeAccelerationContribution(Point Pos);
 
@@ -17,8 +18,7 @@ class Planet {
   const int kSoiRadiusFactor = 30;
   const int kGravity = 9000000;
 
-  Point mP;
-  int mR;
+  // Member variables
   int mSoi; // Radius of sphere of influence
 };
 

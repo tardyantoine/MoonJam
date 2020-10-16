@@ -3,7 +3,7 @@
 
 #include "moon.h"
 
-Moon::Moon(Point p, Point v, int r, bool moving) : Planet(p, r) {
+Moon::Moon(Point p, Point v, int r, bool moving) : SpaceBody(p, r)  {
   mV = v;
   mMoving = moving;
   initTail();

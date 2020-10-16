@@ -5,11 +5,12 @@
 #include <vector>
 #include "graphics.h"
 #include "planet.h"
+#include "space_body.h"
 #include <queue>
 #include <ctime>
 #include <memory>
 
-class Moon : public Planet{
+class Moon : public SpaceBody{
  public:
   Moon(Point p, Point v, int r, bool moving);
   void updateState(const std::vector<std::shared_ptr<Planet>> &planets);
