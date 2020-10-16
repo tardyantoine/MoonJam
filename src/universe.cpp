@@ -1,22 +1,41 @@
 #ifndef UNIVERSE_CPP
 #define UNIVERSE_CPP
 
-#include <iostream>       // std::cin, std::cout
-#include <queue>          // std::queue
+#include <iostream>
+#include <queue>
+#include <ctime>
+#include <thread>
 #include "SDL.h"
 #include "universe.h"
 #include "planet.h"
 #include "moon.h"
 
+// TODO:
+// - multi thread
+// - User input
+// - random start point
+// - Inherit moon planet
+// - SOI
+// - Braking
+// - Collisions
+// - Different worlds vs random
+// - File map
+// - Start menu buttons
+
+#define FPS 2.0f
+
 void Universe::run()
 {
   Planet* p = new Planet(Point(kWidth/2, kHeight/2), 50);
   mPlanets.push_back(p);
-  std::cout << "Planets created..." << std::endl;
+  std::cout << "First Planet created..." << std::endl;
 
-  Moon* m = new Moon(Point(kWidth/2, kHeight/4), Point(0.06, 0.0), 5);
+  srand(clock());
+  float newX = (float(rand() % kWidth) * 0.9f) + (0.05f * float(kWidth));
+  float newY = (float(rand() % kHeight) * 0.9f) + (0.05f * float(kHeight));
+  Moon* m = new Moon(Point(newX, newY), Point(0.0, 0.0), 5, false);
   mMoons.push_back(m);
-  std::cout << "Moons created..." << std::endl;
+  std::cout << "First Moon created..." << std::endl;
 
   if (SDL_Init(SDL_INIT_VIDEO) == 0) {
     SDL_Window* window = NULL;
@@ -26,6 +45,8 @@ void Universe::run()
       
       // Infinite MAIN loop
       SDL_bool done = SDL_FALSE;
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
       while(!done) {
         SDL_Event event;
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
@@ -52,20 +73,51 @@ void Universe::run()
           done = SDL_TRUE;
           break;
 
+        case SDL_MOUSEBUTTONDOWN:
+          if(mState == FsmState::CreatingMoon) {
+            mState = FsmState::PilotingMoon;
+            int mouseX = 0;
+            int mouseY = 0;
+            SDL_GetMouseState(&mouseX, &mouseY);
+            Point pointer = {float(mouseX), float(mouseY)};
+            Point newSpeed = pointer - mMoons.back()->getPos();
+            mMoons.back()->setSpeed(newSpeed * kSpeedCoeff);
+            mMoons.back()->setMoving(true);
+            std::cout << "New Moon launched..." << std::endl;
+          }
+          break;
+
         case SDL_KEYDOWN:
           switch( event.key.keysym.sym ){
           case SDLK_UP:
-            // TODO update
-            mMoons[0]->modifySpeed(1.00001);
+            if(mState == FsmState::PilotingMoon) {
+              mMoons.back()->modifySpeed(1.003);
+            }
             break;
+
           case SDLK_DOWN:
-            mMoons[0]->modifySpeed(0.95);
+            if(mState == FsmState::PilotingMoon) {
+              mMoons.back()->modifySpeed(0.998);
+            }
             break;
-          default:
+
+          case SDLK_RETURN:
+            // Create new Moon
+            if(mState == FsmState::PilotingMoon) {
+              mState = FsmState::CreatingMoon;
+              srand(clock());
+              float newX = (float(rand() % kWidth) * 0.9f) + (0.05f * float(kWidth));
+              float newY = (float(rand() % kHeight) * 0.9f) + (0.05f * float(kHeight));
+              Moon* m = new Moon(Point(newX, newY), Point(0.0, 0.0), 5, false);
+              mMoons.push_back(m);
+              std::cout << "New Moon created..." << std::endl;
+            }
             break;
-          break;
           }
+          break;
         }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
       }
     }
 
@@ -77,6 +129,10 @@ void Universe::run()
     }
   }
   SDL_Quit();
+}
+
+Universe::Universe() {
+  mState = FsmState::CreatingMoon;
 }
 
 Universe::~Universe() {

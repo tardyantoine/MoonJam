@@ -8,7 +8,7 @@
 #include "point.h"
 #include <iostream>
 
-#define A 0.003
+#define A 9000000
 
 void Planet::drawPlanet(SDL_Renderer * renderer) {
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);

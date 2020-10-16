@@ -1,22 +1,41 @@
 #ifndef MOON_CPP
 #define MOON_CPP
 
-#include "SDL.h"
+#include <iostream>
+#include <ctime>
 #include <vector>
+#include "SDL.h"
 #include "moon.h"
 #include "graphics.h"
 #include "point.h"
 #include "planet.h"
-#include <iostream>
 
-#define TAIL_LENGTH 100000
-#define TAIL_INTERVAL 400
+#define TAIL_LENGTH 300
+#define TAIL_INTERVAL 1
 
-Moon::Moon(Point p, Point v, int r) {
+Moon::Moon(Point p, Point v, int r, bool moving) {
   mP = p;
   mV = v;
   mR = r;
+  mMoving = moving;
   initTail();
+  srand(clock());
+  mRed = rand() % 255;
+  mGreen = rand() % 255;
+  mBlue = rand() % 255;
+}
+
+void Moon::setSpeed(Point v) {
+  mV.mX = v.mX;
+  mV.mY = v.mY;
+}
+
+void Moon::setMoving(bool m) {
+  mMoving = m;
+}
+
+Point Moon::getPos() {
+  return mP;
 }
 
 void Moon::initTail() {
@@ -32,13 +51,22 @@ void Moon::updateTail() {
 
 void Moon::updateState(const std::vector<Planet*> &planets) {
   Point a(0, 0);
-  for(Planet* p : planets) {
-    a = a + p->computeAccelerationContribution(mP);
+  
+  if(mMoving) {
+    for(Planet* p : planets) {
+      a = a + p->computeAccelerationContribution(mP);
+    }
+
+    clock_t now = clock();
+    if(lastUpdate == 0) { lastUpdate = now; }
+    float dt = float(now - lastUpdate) / CLOCKS_PER_SEC;
+
+    mV = mV + a * dt;
+    mP = mP + mV * dt;
+    updateTail();
   }
 
-  mP = mP + mV;
-  updateTail();
-  mV = mV + a;
+  lastUpdate = clock();
 }
 
 void Moon::modifySpeed(float modifier) {
@@ -47,17 +75,22 @@ void Moon::modifySpeed(float modifier) {
 
 void Moon::drawMoon(SDL_Renderer * renderer) {
   // Draw tail
-  Point p(0, 0);
+  Point p(0, 0), pPrev(0, 0);
   float intensity = 0;
-  for(int i = 0; i < TAIL_LENGTH; i += TAIL_INTERVAL) {
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+  for(int i = 1; i < TAIL_LENGTH; i += TAIL_INTERVAL) {
     p = mTail[i];
+    pPrev = mTail[i - 1];
+
     float intensity = 255.0f * ((float)i / TAIL_LENGTH);
-    SDL_SetRenderDrawColor(renderer, intensity, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawPoint(renderer, p.mX, p.mY);
+    SDL_SetRenderDrawColor(renderer, mRed, mBlue, mGreen, intensity);
+
+    SDL_RenderDrawLine(renderer, p.mX, p.mY, pPrev.mX, pPrev.mY);
   }
 
   // Draw actual Moon
-  SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+  SDL_SetRenderDrawColor(renderer, mRed, mBlue, mGreen, SDL_ALPHA_OPAQUE);
   drawCircle(renderer, mP, mR);
 }
 

@@ -6,6 +6,13 @@ class Point {
   Point(float x, float y);
   Point() {}
 
+  // Point operator=(const Point& a) {
+  //   Point b(0, 0);
+  //   b.mX = a.mX;
+  //   b.mY = a.mY;
+  //   return b;
+  // }
+
   Point operator+(const Point& a) {
     Point b(0, 0);
     b.mX = this->mX + a.mX;
