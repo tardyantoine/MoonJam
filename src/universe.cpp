@@ -3,10 +3,6 @@
 #include <iostream>
 #include "universe.h"
 
-// TODO:
-// Display initial vel arrow
-// - README!
-
 void Universe::run(uint planetNumber)
 {
   if (SDL_Init(SDL_INIT_VIDEO) == 0) {
@@ -24,6 +20,8 @@ void Universe::run(uint planetNumber)
     SDL_GetDesktopDisplayMode(0, &DM);
     kWidth = DM.w;
     kHeight = DM.h;
+    kWidth = 1100;
+    kHeight = 800;
 
     // Needs to happen after resolution is set
     createBodies(planetNumber);
@@ -99,6 +97,17 @@ void Universe::run(uint planetNumber)
         scoreMessage = SDL_CreateTextureFromSurface(renderer, scoreSurf);
         scoreRect.w = 30 * (std::floor(mMoons.size() / 10) + 1); // Change box width for bigger numbers
         SDL_RenderCopy(renderer, scoreMessage, NULL, &scoreRect);
+
+        // Draw init velocity vector
+        if(mState == FsmState::CreatingMoon) {
+          int mouseX = 0;
+          int mouseY = 0;
+          Point pos = mMoons.back()->getPos();
+          SDL_GetMouseState(&mouseX, &mouseY);
+          SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+          SDL_RenderDrawLine(renderer, mouseX, mouseY, pos.mX, pos.mY);
+          drawCircle(renderer, Point(mouseX, mouseY), 10);
+        }
 
         // Render all
         SDL_RenderPresent(renderer);
@@ -196,11 +205,11 @@ void Universe::createBodies(uint planetNumber) {
     break;
 
   case 5:
-    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6,   kHeight/3),   20, 400));
-    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6*3, kHeight/3),   20, 400));
-    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6*5, kHeight/3),   20, 400));
-    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4,   kHeight/3*2), 20, 400));
-    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4*3, kHeight/3*2), 20, 400));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6,   kHeight/3),   20, 200));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6*3, kHeight/3),   20, 200));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6*5, kHeight/3),   20, 200));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4,   kHeight/3*2), 20, 200));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4*3, kHeight/3*2), 20, 200));
     break;
   }
   std::cout << "Universe created..." << std::endl;

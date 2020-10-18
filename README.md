@@ -1,12 +1,19 @@
-# CPPND: Capstone Snake Game Example
+# MoonJam: Orbital physics simulator
 
-This is a starter repo for the Capstone project in the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). The code for this repo was inspired by [this](https://codereview.stackexchange.com/questions/212296/snake-game-in-c-with-sdl) excellent StackOverflow post and set of responses.
+<img src="1.png"/>
 
-<img src="snake_game.gif"/>
+Create new Moons and send them orbiting around planets. Meditate watching them moving through your universe, or try to see how many stable orbits you can keep on a 5 planets system!
 
-The Capstone Project gives you a chance to integrate what you've learned throughout this program. This project will become an important part of your portfolio to share with current and future colleagues and employers.
+<img src="2.png"/>
 
-In this project, you can build your own C++ application or extend this Snake game, following the principles you have learned throughout this Nanodegree Program. This project will demonstrate that you can independently create applications using a wide range of C++ features.
+## Controls
+1. Use the mouse to click and give an initial velocity to your Moon
+2. Once in orbit, you can control the last Moon's velocity with UP and DOWN arrow
+   1. Tip: try and circularize your orbit by braking at the closest/fastest point (apogea) or accelerating at the furthest/fastest point (perigea)
+   2. Careful! You'll lose your Moon if it crashes into a planet or wanders too far of screen
+3. Once you are satisfied with your orbit, press ENTER to create a new Moon
+
+<img src="3.png"/>
 
 ## Dependencies for Running Locally
 * cmake >= 3.7
@@ -22,10 +29,13 @@ In this project, you can build your own C++ application or extend this Snake gam
   * Linux: gcc / g++ is installed by default on most Linux distros
   * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
   * Windows: recommend using [MinGW](http://www.mingw.org/)
+* SDL_TTF
+  * https://www.libsdl.org/projects/SDL_ttf/
 
 ## Basic Build Instructions
 
 1. Clone this repo.
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
-4. Run it: `./SnakeGame`.
+4. Run it: `./MoonJam`
+   1. Run with multiple planets: `./MoonJam 4` (argument from 1 to 5 included)
