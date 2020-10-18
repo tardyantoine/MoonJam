@@ -20,8 +20,6 @@ void Universe::run(uint planetNumber)
     SDL_GetDesktopDisplayMode(0, &DM);
     kWidth = DM.w;
     kHeight = DM.h;
-    kWidth = 1100;
-    kHeight = 800;
 
     // Needs to happen after resolution is set
     createBodies(planetNumber);
@@ -205,11 +203,11 @@ void Universe::createBodies(uint planetNumber) {
     break;
 
   case 5:
-    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6,   kHeight/3),   20, 200));
-    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6*3, kHeight/3),   20, 200));
-    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6*5, kHeight/3),   20, 200));
-    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4,   kHeight/3*2), 20, 200));
-    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4*3, kHeight/3*2), 20, 200));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6,   kHeight/3),   20, 400));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6*3, kHeight/3),   20, 400));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/6*5, kHeight/3),   20, 400));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4,   kHeight/3*2), 20, 400));
+    mPlanets.push_back(std::make_shared<Planet>(Point(kWidth/4*3, kHeight/3*2), 20, 400));
     break;
   }
   std::cout << "Universe created..." << std::endl;
