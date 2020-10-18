@@ -37,5 +37,7 @@ Create new Moons and send them orbiting around planets. Meditate watching them m
 1. Clone this repo.
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
-4. Run it: `./MoonJam`
-   1. Run with multiple planets: `./MoonJam 4` (argument from 1 to 5 included)
+
+## Launch simulation
+1. From your build directory, run `./MoonJam`
+2. Run with multiple planets: `./MoonJam 4` (argument from 1 to 5 included)
