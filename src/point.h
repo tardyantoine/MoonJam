@@ -1,17 +1,14 @@
 #ifndef POINT_H
 #define POINT_H
 
+#include <cmath>
+
 class Point {
  public:
   Point(float x, float y);
   Point() {}
 
-  // Point operator=(const Point& a) {
-  //   Point b(0, 0);
-  //   b.mX = a.mX;
-  //   b.mY = a.mY;
-  //   return b;
-  // }
+  float dist() { return std::sqrt( std::pow(mX,2) + std::pow(mY,2) ); }
 
   Point operator+(const Point& a) {
     Point b(0, 0);

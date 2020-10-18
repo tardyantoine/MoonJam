@@ -22,10 +22,6 @@ void Moon::setMoving(bool m) {
   mMoving = m;
 }
 
-Point Moon::getPos() {
-  return mP;
-}
-
 void Moon::initTail() {
   for(int i = 0; i < kTailLength; ++i) {
     mTail.push_back(mP);
@@ -37,12 +33,22 @@ void Moon::updateTail() {
   mTail.push_back(mP);
 }
 
-void Moon::updateState(const std::vector<std::shared_ptr<Planet>> &planets) {
+void Moon::updateState(const std::vector<std::shared_ptr<Planet>> &planets, int w, int h) {
   Point a(0, 0);
   
   if(mMoving) {
+    // Get Planet accel and collision
     for(auto p : planets) {
       a = a + p->computeAccelerationContribution(mP);
+      Point diff = mP - p->getPos();
+      if(diff.dist() < p->getRadius()) {
+        isDead = true;
+      }
+    }
+
+    // Make sure the Moon is not too far
+    if(mP.mX > 2*w || mP.mX < -1*w || mP.mY > 2*h || mP.mY < -1*h) {
+      isDead = true;
     }
 
     clock_t now = clock();

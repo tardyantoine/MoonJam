@@ -13,13 +13,15 @@
 class Moon : public SpaceBody{
  public:
   Moon(Point p, Point v, int r, bool moving);
-  void updateState(const std::vector<std::shared_ptr<Planet>> &planets);
+  void updateState(const std::vector<std::shared_ptr<Planet>> &planets, int w, int h);
   void draw(SDL_Renderer * renderer);
   void initTail();
   void modifySpeed(float modifier);
   void setMoving(bool m);
   void setSpeed(Point v);
-  Point getPos();
+  void setDeadBool(bool b) { isDead = b; }
+  bool getDeadBool() { return isDead; }
+  Point getPos() { return mP; }
   
  private:
   // Constants
@@ -33,6 +35,9 @@ class Moon : public SpaceBody{
   long mRed;
   long mGreen;
   long mBlue;
+
+  // Is true is collision occured
+  bool isDead = false;
 
   void updateTail();
 };

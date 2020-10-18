@@ -4,8 +4,7 @@
 #include "universe.h"
 
 // TODO:
-// - Collisions
-// - Score
+// Display initial vel arrow
 // - README!
 
 void Universe::run(uint planetNumber)
@@ -17,19 +16,25 @@ void Universe::run(uint planetNumber)
     SDL_Texture* messageC = NULL;
     SDL_Surface* surfP = NULL;
     SDL_Texture* messageP = NULL;
+    SDL_Surface* scoreSurf = NULL;
+    SDL_Texture* scoreMessage = NULL;
 
     // Get resolution
     SDL_DisplayMode DM;
     SDL_GetDesktopDisplayMode(0, &DM);
     kWidth = DM.w;
     kHeight = DM.h;
-    std::cout << kWidth << std::endl;
 
     // Needs to happen after resolution is set
     createBodies(planetNumber);
     
     if (SDL_CreateWindowAndRenderer(kWidth, kHeight, 0, &window, &renderer) == 0) {
-      
+      // Score Rect
+      SDL_Rect scoreRect; 
+      scoreRect.h = 40;
+      scoreRect.x = kWidth - 120;
+      scoreRect.y = kHeight - 150; 
+
       // Instructions message
       TTF_Init();
       TTF_Font* nasa = TTF_OpenFont("../fonts/nasalization-rg.ttf", 500);
@@ -38,11 +43,11 @@ void Universe::run(uint planetNumber)
       messageRect.w = 1000;  
       messageRect.h = 40;
       messageRect.x = kWidth/2 - messageRect.w/2;
-      messageRect.y = 10; 
-      SDL_Surface* surfP = TTF_RenderText_Solid(
+      messageRect.y = 10;
+      surfP = TTF_RenderText_Solid(
         nasa, "UP/DOWN Arrow to control speed, ENTER to create Moon", white);
       messageP = SDL_CreateTextureFromSurface(renderer, surfP);
-      SDL_Surface* surfC = TTF_RenderText_Solid(
+      surfC = TTF_RenderText_Solid(
         nasa, "LEFT click to define the new Moon's initial velocity vector", white);
       messageC = SDL_CreateTextureFromSurface(renderer, surfC);
                   
@@ -62,15 +67,38 @@ void Universe::run(uint planetNumber)
         }
 
         // Draw moons and move them
-        for(auto m : mMoons) {
-          m->draw(renderer);
-          m->updateState(mPlanets);
+        for (auto it = begin(mMoons); it != end(mMoons); ++it) {
+          it->get()->draw(renderer);
+
+          if(it->get()->getDeadBool()) { // Erase Moon if it collided or too far
+            mMoons.erase(it);
+            if(mMoons.empty()) {
+              // Create new Moon
+              mState = FsmState::CreatingMoon;
+              srand(clock());
+              float newX = (float(rand() % kWidth) * 0.9f) + (0.05f * float(kWidth));
+              float newY = (float(rand() % kHeight) * 0.9f) + (0.05f * float(kHeight));
+              auto m = std::make_shared<Moon>(Point(newX, newY), Point(0.0, 0.0), 5, false);
+              mMoons.push_back(m);
+              std::cout << "New Moon created..." << std::endl;
+            }
+            break;
+          }
+          else {
+            it->get()->updateState(mPlanets, kWidth, kHeight);
+          }
         }
 
         // Display instuctions message
         mState == FsmState::CreatingMoon ? 
           SDL_RenderCopy(renderer, messageC, NULL, &messageRect) : 
           SDL_RenderCopy(renderer, messageP, NULL, &messageRect);
+
+        // Display score
+        scoreSurf = TTF_RenderText_Solid(nasa, std::to_string(mMoons.size()).c_str(), white);
+        scoreMessage = SDL_CreateTextureFromSurface(renderer, scoreSurf);
+        scoreRect.w = 30 * (std::floor(mMoons.size() / 10) + 1); // Change box width for bigger numbers
+        SDL_RenderCopy(renderer, scoreMessage, NULL, &scoreRect);
 
         // Render all
         SDL_RenderPresent(renderer);
@@ -136,6 +164,8 @@ void Universe::run(uint planetNumber)
     if(messageP) { SDL_DestroyTexture(messageP); }
     if(surfC) { SDL_FreeSurface(surfC); }
     if(messageC) { SDL_DestroyTexture(messageC); }
+    if(scoreSurf) { SDL_FreeSurface(scoreSurf); }
+    if(scoreMessage) { SDL_DestroyTexture(scoreMessage); }
   }
   SDL_Quit();
 }

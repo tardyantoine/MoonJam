@@ -12,6 +12,8 @@ class Planet : SpaceBody {
   Planet(Point pos, int r, int soi) : SpaceBody(pos, r) { mSoi = soi; }
   void draw(SDL_Renderer * renderer);
   Point computeAccelerationContribution(Point Pos);
+  Point getPos() { return mP; }
+  int getRadius() { return mR; }
 
  protected:
   // Constants

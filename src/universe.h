@@ -8,9 +8,11 @@
 #include <SDL_ttf.h>
 #include <vector>
 #include <thread>
+#include <mutex>
 #include <memory>
 #include "moon.h"
 #include "planet.h"
+#include "space_body.h"
 
 
 enum FsmState {
@@ -38,6 +40,9 @@ class Universe {
   std::vector<std::thread> mThreads;
   std::vector<std::shared_ptr<Planet>> mPlanets;
   FsmState mState;
+
+  // Mutex for collision thread to check planet interaction
+  std::mutex mtx;
 
   // Methods
   void createBodies(uint planetNumber);
