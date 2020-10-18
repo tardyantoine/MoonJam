@@ -41,3 +41,33 @@ Create new Moons and send them orbiting around planets. Meditate watching them m
 ## Launch simulation
 1. From your build directory, run `./MoonJam`
 2. Run with multiple planets: `./MoonJam 4` (argument from 1 to 5 included)
+
+## Code Structure
+* Universe class: Contains the main simulation parameters and loop, as well as the data structure handles
+* SpaceBody: Parent virtual class for all space bodies. Children:
+  * Moon class: Moon simulation, motion physics
+  * Planet class: Acceleration physics
+* Graphics class: Helper for drawing methods
+* Point class: helper for physics vectors
+
+* Universe::Universe() creates the initial data
+* Univers::run() starts the main sim loop, starts the display, and handles the timing 
+* Moon::updateState() is the main motion physics simulator
+* Planet::computeAccelerationComponent() calculates the gravitational force of each planet on a Moon
+
+## Rubric Completion
+* The project demonstrates an understanding of C++ functions and control structures.
+  * **Everywhere**
+* The project accepts user input and processes the input.
+  * **src/universe.cpp:120 and after**
+* The project uses Object Oriented Programming techniques.
+  * **Everywhere**
+* Class constructors utilize member initialization lists.
+  * **src/space_body.h:8**
+* Classes follow an appropriate inheritance hierarchy.
+  * **Moon : SpaceBody | Planet : SpaceBody**
+* Overloaded functions allow the same function to operate on different parameters. AND
+* Derived class functions override virtual base class functions.
+  * **src/moon.cpp:70**
+* The project uses smart pointers instead of raw pointers.
+  * **src/universe.h:36 and 37
